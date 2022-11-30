@@ -32,7 +32,7 @@ interface WysiwygComposerProps {
     initialContent?: string;
     className?: string;
     leftComponent?: ReactNode;
-    rightComponent?: ReactNode;
+    rightComponent?: (composerFunctions: FormattingFunctions) => ReactNode;
     children?: (
         ref: MutableRefObject<HTMLDivElement | null>,
         wysiwyg: FormattingFunctions,
@@ -69,10 +69,12 @@ export const WysiwygComposer = memo(function WysiwygComposer(
     const { isFocused, onFocus } = useIsFocused();
     const computedPlaceholder = !content && placeholder || undefined;
 
+    //    const rightComp = rightComponent(wysiwyg);
+
     return (
         <div data-testid="WysiwygComposer" className={classNames(className, { [`${className}-focused`]: isFocused })} onFocus={onFocus} onBlur={onFocus}>
             <FormattingButtons composer={wysiwyg} actionStates={actionStates} />
-            <Editor ref={ref} disabled={!isReady} leftComponent={leftComponent} rightComponent={rightComponent} placeholder={computedPlaceholder} />
+            <Editor ref={ref} disabled={!isReady} leftComponent={leftComponent} rightComponent={rightComponent(wysiwyg)} placeholder={computedPlaceholder} />
             { children?.(ref, wysiwyg) }
         </div>
     );
